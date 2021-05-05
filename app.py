@@ -1,6 +1,6 @@
 from flask import Flask , request
 from flask_restful import Resource, Api
-from flask_caching import Cache
+from functools import lru_cache
 ##########
 import torch
 import json 
@@ -30,7 +30,7 @@ model = T5ForConditionalGeneration.from_pretrained('t5-small')
 tokenizer = T5Tokenizer.from_pretrained('t5-small')
 device = torch.device('cpu')
 
-# @cache.cached(timeout=3000)
+@lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
 def summarize_text_def(text, max_length=0.5, early_stop=False):
     preprocess_text = text.strip().replace("\n"," ")
     preprocess_text = preprocess_text.strip().replace("\t","  ")
@@ -49,11 +49,12 @@ def summarize_text_def(text, max_length=0.5, early_stop=False):
 class summarize_text(Resource):
     def get(self):
         text = request.form['data']
-        if (text.count(" ") < 1000):
+        if (text.count(" ") < 700):
             return {"Summary": summarize_text_def(text)}
-        else: return {"Text is too long, Please understand that this is an experiment. Help me in & Buy me a Coffee for bigger limits."}
+        else: return {"Text is too long, Please understand that the developer is an unemployed student. Help me in & Buy me a Coffee for bigger limits."}
 
 class parse_article_links(Resource):
+    @lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
     def get(self):
         url = request.form['data']
         article = Article(url)
@@ -63,6 +64,7 @@ class parse_article_links(Resource):
         return summarize_text_def(text)
 
 class parse_reddit_posts(Resource):
+    @lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
     def get(self):
         pass
 
