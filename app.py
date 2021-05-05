@@ -1,5 +1,9 @@
 from flask import Flask , request
 from flask_restful import Resource, Api
+
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 from functools import lru_cache
 ##########
 import torch
@@ -22,7 +26,10 @@ config = {
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
     "CACHE_DEFAULT_TIMEOUT": 2000 # time out is 2 seconds. yeah, I'll try to decrease it later.
 }
-# cache = Cache(config=config)      # this is for the decorator.
+
+def check_token(f):
+
+    pass
 
 text = {}
 
@@ -53,6 +60,8 @@ class summarize_text(Resource):
             return {"Summary": summarize_text_def(text)}
         else: return {"Text is too long, Please understand that the developer is an unemployed student. Help me in & Buy me a Coffee for bigger limits."}
 
+
+@limiter.limit("1/second", override_defaults=False)
 class parse_article_links(Resource):
     @lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
     def get(self):
@@ -63,6 +72,8 @@ class parse_article_links(Resource):
         text = article.text
         return summarize_text_def(text)
 
+
+@limiter.limit("1/second", override_defaults=False)
 class parse_reddit_posts(Resource):
     @lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
     def get(self):
@@ -75,4 +86,3 @@ api.add_resource(parse_reddit_posts,'/api/reddit-post')
 if __name__ == '__main__':
     app.config.from_mapping(config)
     app.run(host="0.0.0.0",port="8080")
-    # cache = Cache(app)
