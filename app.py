@@ -6,7 +6,7 @@ from flask_limiter.util import get_remote_address
 
 from functools import lru_cache
 ##########
-# import torch
+import torch
 import json 
 from transformers import T5Tokenizer, T5ForConditionalGeneration, T5Config
 ############
@@ -43,7 +43,7 @@ def summarize_text_def(text, max_length=0.5, early_stop=False):
     preprocess_text = preprocess_text.strip().replace("\t","  ")
 
     t5_prepared_Text = "summarize: "+preprocess_text
-    tokenized_text = tokenizer.encode(t5_prepared_Text, return_tensors="pt")
+    # tokenized_text = tokenizer.encode(t5_prepared_Text, return_tensors="pt")
     summary_ids = model.generate(tokenized_text,
                                     num_beams=2,
                                     no_repeat_ngram_size=3,
