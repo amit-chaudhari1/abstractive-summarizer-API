@@ -10,6 +10,7 @@ filelock==3.0.12
 Flask==1.1.2
 Flask-Limiter==1.4
 Flask-RESTful==0.3.8
+gunicorn==20.1.0
 idna==2.10
 itsdangerous==1.1.0
 jieba3k==0.35.1
@@ -31,6 +32,7 @@ regex==2021.4.4
 requests==2.25.1
 requests-file==1.5.1
 sacremoses==0.0.45
+sentencepiece==0.1.95
 sgmllib3k==1.0.0
 six==1.16.0
 soupsieve==2.2.1
