@@ -6,7 +6,7 @@ from flask_limiter.util import get_remote_address
 
 from functools import lru_cache
 ##########
-import torch
+# import torch
 import json 
 from transformers import T5Tokenizer, T5ForConditionalGeneration, T5Config
 ############
@@ -35,7 +35,7 @@ text = {}
 
 model = T5ForConditionalGeneration.from_pretrained('t5-small')
 tokenizer = T5Tokenizer.from_pretrained('t5-small')
-device = torch.device('cpu')
+# device = torch.device('cpu')
 
 @lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
 def summarize_text_def(text, max_length=0.5, early_stop=False):
@@ -43,7 +43,7 @@ def summarize_text_def(text, max_length=0.5, early_stop=False):
     preprocess_text = preprocess_text.strip().replace("\t","  ")
 
     t5_prepared_Text = "summarize: "+preprocess_text
-    tokenized_text = tokenizer.encode(t5_prepared_Text, return_tensors="pt").to(device)
+    tokenized_text = tokenizer.encode(t5_prepared_Text, return_tensors="pt")
     summary_ids = model.generate(tokenized_text,
                                     num_beams=2,
                                     no_repeat_ngram_size=3,
@@ -61,7 +61,7 @@ class summarize_text(Resource):
         else: return {"Text is too long, Please understand that the developer is an unemployed student. Help me in & Buy me a Coffee for bigger limits."}
 
 
-@limiter.limit("1/second", override_defaults=False)
+# @limiter.limit("1/second", override_defaults=False)
 class parse_article_links(Resource):
     @lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
     def get(self):
@@ -73,7 +73,7 @@ class parse_article_links(Resource):
         return summarize_text_def(text)
 
 
-@limiter.limit("1/second", override_defaults=False)
+# @limiter.limit("1/second", override_defaults=False)
 class parse_reddit_posts(Resource):
     @lru_cache(maxsize=400)     #this will save past 400 calls in python3.9 it must be simply cache.
     def get(self):
