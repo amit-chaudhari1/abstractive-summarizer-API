@@ -37,7 +37,6 @@ soupsieve==2.2.1
 tinysegmenter==0.3
 tldextract==3.1.0
 tokenizers==0.10.2
-torch==1.8.1
 tqdm==4.60.0
 transformers==4.5.1
 typing-extensions==3.10.0.0
